@@ -69,7 +69,7 @@
 
 <!--Movies posted by user title-->
 <div class="row">
-    <div class="col-12">
+    <div class="col-6">
         <div th:if="${ searchUser != null and searchUser != '' and searchUser != #authentication.name}"
              style="padding-left: 10px">
             <h4 style="padding-left: 10px" th:if="${searchUser != null}"
@@ -78,6 +78,11 @@
         <div th:if="${ searchUser != null and searchUser != '' and searchUser == #authentication.name}"
              style="padding-left: 10px">
             <p style="padding-left: 10px" th:if="${searchUser != null}" th:text="'Movies posted by you'"></p>
+        </div>
+    </div>
+    <div class="col-6">
+        <div th:if="${ searchUser != null and searchUser != ''}">
+            <a th:href="@{/movies}">Back to Movies overview</a>
         </div>
     </div>
 </div>

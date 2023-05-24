@@ -32,7 +32,7 @@
             <column name="TITLE" value="The Empire Strikes Back"/>
             <column name="DESCRIPTION" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."/>
             <column name="EMAIL" value="jaimelannister@mail.com"/>
-            <column name="CREATED_AT" value="2023-04-22 14:50:29.620143"/>
+            <column name="CREATED_AT" value="2020-04-22 14:50:29.620143"/>
         </insert>
 
         <insert tableName="MOVIES">
@@ -66,6 +66,23 @@
             <column name="EMAIL" value="jonsnow@mail.com"/>
             <column name="CREATED_AT" value="2023-05-03 14:50:29.620143"/>
         </insert>
+
+        <insert tableName="MOVIES">
+            <column name="ID" value="82b09b0e-f8cc-11ed-be56-0242ac120006"/>
+            <column name="TITLE" value="Matrix"/>
+            <column name="DESCRIPTION" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "/>
+            <column name="EMAIL" value="jonsnow@mail.com"/>
+            <column name="CREATED_AT" value="2023-05-24 14:50:29.620143"/>
+        </insert>
+
+        <insert tableName="MOVIES">
+            <column name="ID" value="82b09b0e-f8cc-11ed-be56-0242ac120007"/>
+            <column name="TITLE" value="Avatar"/>
+            <column name="DESCRIPTION" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "/>
+            <column name="EMAIL" value="jonsnow@mail.com"/>
+            <column name="CREATED_AT" value="2023-05-24 22:14:29.620143"/>
+        </insert>
+
 
         <insert tableName="MOVIE_VOTES">
             <column name="MOVIE_ID" value="82b09b0e-f8cc-11ed-be56-0242ac120001"/>

@@ -77,10 +77,8 @@ public class MovieController {
                        @RequestParam(value = "email", required = false) String searchUser,
                        @RequestParam(value = "searchUserName", required = false) String searchUserName,
                        @RequestParam(value = "sortOption", required = false) String sortOption) {
-        // TODO validations
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         if (auth != null) {
             movieVoteService.saveMovieVote(movieId, auth.getName(), vote);
         }
@@ -99,7 +97,6 @@ public class MovieController {
                              @RequestParam(value = "email", required = false) String searchUser,
                              @RequestParam(value = "searchUserName", required = false) String searchUserName,
                              @RequestParam(value = "sortOption", required = false) String sortOption) {
-        // TODO validations
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
