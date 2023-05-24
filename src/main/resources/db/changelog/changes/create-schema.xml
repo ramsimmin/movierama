@@ -1,0 +1,46 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="aparissi (generated)" id="1">
+        <sql>
+            CREATE TABLE users
+            (
+                email      VARCHAR(255) NOT NULL,
+                name       VARCHAR(255) NOT NULL,
+                password   VARCHAR(255),
+                created_at TIMESTAMP,
+                CONSTRAINT pk_users PRIMARY KEY (email)
+            );
+
+
+            CREATE TABLE movies
+            (
+                id          VARCHAR(255)                            NOT NULL,
+                title       VARCHAR(255)                            NOT NULL,
+                description VARCHAR(1000)                           NOT NULL,
+                email       VARCHAR(255)                            NOT NULL,
+                created_at  TIMESTAMP,
+                CONSTRAINT pk_movies PRIMARY KEY (id)
+            );
+
+            ALTER TABLE movies
+                ADD CONSTRAINT FK_MOVIES_ON_EMAIL FOREIGN KEY (email) REFERENCES users (email);
+
+
+
+            CREATE TABLE movie_votes
+            (
+                movie_id VARCHAR(255) NOT NULL,
+                email    VARCHAR(255) NOT NULL,
+                vote     BOOLEAN,
+                CONSTRAINT pk_movie_votes PRIMARY KEY (movie_id, email)
+            );
+
+            ALTER TABLE movie_votes
+                ADD CONSTRAINT FK_MOVIE_VOTES_ON_MOVIE FOREIGN KEY (movie_id) REFERENCES movies (id);
+
+
+
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}">MovieRama</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/login}">Log in</a></li>
+            <li sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/register}">Sign up</a></li>
+            <li sec:authorize="isAuthenticated()"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+        </ul>
+    </div>
+
+</nav>

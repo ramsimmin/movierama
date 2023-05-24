@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>MovieRama</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/utils.js}"></script>
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar"></div>
+
+<div class="row" sec:authorize="isAuthenticated()">
+    <!-- Welcome message -->
+    <div class="col-6">
+        <h4 style="margin-left: 16px; margin-top: 5px;" sec:authorize="isAuthenticated()">Welcome, <span
+                class="navbar-link"
+                th:text="${#authentication.getPrincipal().getName()}"></span>
+        </h4>
+    </div>
+    <!-- Create movie button -->
+    <div class="col-6">
+        <p style="text-align: right; margin-right: 16px; padding-top: 5px;">
+            <a th:href="@{/movie/create}" class="btn btn-primary">Create movie</a>
+        </p>
+    </div>
+</div>
+
+
+<div class="row">
+    <!-- Sorting options -->
+    <div class="col-4 justify-content-center m-3">
+        <select class="form-select" th:onchange="reloadByPage(this.value, [[${searchUser}]], [[${searchUserName}]] )">
+            <option value="DATE_DESC" th:selected="(${sortOption} == 'DATE_DESC')"> Sort by Date (newest first)</option>
+            <option value="DATE_ASC" th:selected="(${sortOption} == 'DATE_ASC')"> Sort by Date (oldest first)</option>
+            <option value="LIKES_DESC" th:selected="(${sortOption} == 'LIKES_DESC')">Sort by Likes (highest first)
+            </option>
+            <option value="HATES_DESC" th:selected="(${sortOption} == 'HATES_DESC')">Sort by Hates (highest first)
+            </option>
+        </select>
+    </div>
+
+    <!-- Pagination -->
+    <div class="col-4 m-3">
+        <nav th:if="${moviePage.totalPages > 0}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' ">
+                    <a class="page-link"
+                       th:href="@{/movies(size=${moviePage.size}, page=${currentPage -1}, sortOption=${sortOption})}">
+                        Previous</a>
+                </li>
+                <tr th:each="pageNumber, index : ${pageNumbers}">
+                    <li class="page-item" th:classappend="${pageNumber == currentPage} ? 'active' ">
+                        <a class="page-link"
+                           th:href="@{/movies(size=${moviePage.size}, page=${pageNumber}, sortOption=${sortOption})}"
+                           th:text="${pageNumber}"/>
+                    </li>
+                </tr>
+                <li class="page-item" th:classappend="${currentPage == moviePage.totalPages} ? 'disabled' ">
+                    <a class="page-link"
+                       th:href="@{/movies(size=${moviePage.size}, page=${currentPage +1}, sortOption=${sortOption})}">
+                        Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!--Movies posted by user title-->
+<div class="row">
+    <div class="col-12">
+        <div th:if="${ searchUser != null and searchUser != '' and searchUser != #authentication.name}"
+             style="padding-left: 10px">
+            <h4 style="padding-left: 10px" th:if="${searchUser != null}"
+                th:text="'Movies posted by ' + ${searchUserName} "></h4>
+        </div>
+        <div th:if="${ searchUser != null and searchUser != '' and searchUser == #authentication.name}"
+             style="padding-left: 10px">
+            <p style="padding-left: 10px" th:if="${searchUser != null}" th:text="'Movies posted by you'"></p>
+        </div>
+    </div>
+</div>
+
+<!--Movie content cards-->
+<div class="col-12">
+    <div class="card m-2" th:each="movie, iStat : ${moviePage.content}">
+        <h5 class="card-header" th:text="${movie.title}"/>
+        <div class="card-body">
+            <p class="card-text small"> Posted by
+                <a class="link"
+                   th:text="(${movie.email} == ${#authentication.name}) ? 'You' : ${movie.creatorName}"
+                   th:href="@{/movies(email=${movie.email}, userName=${movie.creatorName} )}"/>
+                <span th:text="${movie.createdAt}"> ago </span>
+            </p>
+
+            <p class="card-text" th:text="${movie.description}"/>
+
+            <div class="row small">
+                <!-- Display count of Likes/Hates -->
+                <div class="col-2">
+                    <div th:if="${#lists.size(movie.votes)} > 0">
+                        <span th:text="${#lists.size(movie.votes.?[vote == true])}"/> 👍 | <span
+                            th:text="${#lists.size(movie.votes.?[vote == false])}"/> 👎 </small>
+                        </p>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <div th:if="${#lists.size(movie.votes) == 0 and movie.email != #authentication.name }">
+                            Be the first to vote for this movie
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-10" style="text-align: right" sec:authorize="isAuthenticated()">
+                    <div th:switch="${@textUtils.isVotedByUser( movie.votes, #authentication.name)}">
+                        <!-- Display Liked/Hated message and cancel vote option -->
+                        <div th:case="true"> You like this movie |
+                            <a class="link"
+                               th:href="@{/movies/vote/delete(movie_id=${movie.id}, page=${currentPage}, email=${searchUser}, searchUserName=${searchUserName}, sortOption=${sortOption}  )}">
+                                Unlike </a>
+                        </div>
+
+                        <div th:case="false"> You hate this movie |
+                            <a class="link"
+                               th:href="@{/movies/vote/delete(movie_id=${movie.id}, page=${currentPage}, email=${searchUser}, searchUserName=${searchUserName}, sortOption=${sortOption} )}">
+                                Unhate </a>
+                        </div>
+
+                        <!-- Display actions for Like/Hate only when the user is not the movie creator -->
+                        <div th:case="null">
+                            <div th:if="${movie.email} != ${#authentication.name}">
+
+                                <a class="link"
+                                   th:href="@{/movies/vote(movie_id=${movie.id}, vote=true, page=${currentPage}, email=${searchUser}, searchUserName=${searchUserName}, sortOption=${sortOption} )}"
+                                   th:text=" Like "/>
+                                |
+                                <a class="link"
+                                   th:href="@{/movies/vote(movie_id=${movie.id}, vote=false, page=${currentPage}, email=${searchUser}, searchUserName=${searchUserName}, sortOption=${sortOption} )}"
+                                   th:text=" Hate "/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function reloadByPage(value, searchUserEmail, searchUserName) {
+        let url = window.location.origin + '/movies?';
+        if (searchUserEmail != null) {
+            url = url + '&email=' + searchUserEmail
+        }
+        if (searchUserName != null) {
+            url = url + '&userName=' + searchUserName
+        }
+        if (value != null) {
+            url = url + '&sortOption=' + value
+        }
+        window.location = url;
+    }
+</script>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>
