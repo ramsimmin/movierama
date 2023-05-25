@@ -8,7 +8,12 @@ the movies and the votes for each movie. Thymeleaf template engine is used to se
 Once you run the application as described in the next steps, you can access the ui by:
 http://localhost:8089/movies
 
+
+![Screenshot](app-overview.png)
+
 Once registered and logged-in, you can create a movie and vote for others.
+
+![Screenshot](app-overview2.png)
 
 ## Build the application
 
